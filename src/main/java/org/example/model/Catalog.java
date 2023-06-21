@@ -51,4 +51,34 @@ public class Catalog {
     public boolean containItems(Item item) {
         return items.contains(item);
     }
+
+    public int getItemQuantityByName(String itemName) {
+        int quantity = 0;
+
+        // Iterate over the items in the catalog
+        for (Item item : items) {
+            // If the item name matches, add the quantity
+            if (item.getName().equals(itemName)) {
+                quantity += item.getQty();
+            }
+        }
+        // Return the total quantity
+        return quantity;
+    }
+
+    public double getItemTotal(String itemName) {
+        double total = 0.0;
+
+        // Iterate over the items in the cart
+        for (Item item : items) {
+            // If the item name matches, add the price
+            if (item.getName().equals(itemName)) {
+                total += item.getPrice() * item.getQty();
+            }
+        }
+
+        // Return the total price
+        return total;
+    }
+
 }

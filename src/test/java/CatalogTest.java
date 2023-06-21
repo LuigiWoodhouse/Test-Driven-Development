@@ -84,4 +84,46 @@ public class CatalogTest {
         Assert.assertEquals(1, catalog.getItemQuantity(item.getQty()));
         log.info("Return Method testDecreaseItemQuantity {}", item.getQty());
     }
+
+    @Test
+    public void testIncreaseItemQuantityWithSameItem() {
+        Catalog catalog = new Catalog();
+
+        // Create a sample item
+        Item item = new Item("Item 2", 22.30, 1);
+
+        // Add the item to the cart
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+
+        // Add the same item to the cart again
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+
+        // Assert that the item quantity has been increased in the cart
+        Assert.assertEquals(2, catalog.getItemQuantityByName("Item 2"));
+        log.info("Return Method testIncreaseItemQuantityWithSameItem :{} ",catalog.getItemQuantityByName("Item 2"));
+    }
+
+    @Test
+    public void costPerItem() {
+
+        Catalog catalog = new Catalog();
+
+        Item item = new Item("Item 1", 22.30, 1);
+
+        // Add the item to the cart
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+        log.info("Enter Method costPerItem: itemName={} itemPrice={}" , item.getName(),item.getPrice());
+
+        // Add the item to the cart
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+        log.info("Enter Method costPerItem: itemName={} itemPrice={}" , item.getName(),item.getPrice());
+
+        // Use assertEquals(expected, actual, delta) to compare floating-point numbers
+        double expected = 22.30 * 2;
+        double actual = catalog.getItemTotal("Item 1");
+        double delta = 0.000001;
+        Assert.assertEquals(expected, actual, delta);
+        log.info("Return Method costPerItem: itemName={} itemPrice={}" , catalog.getItemTotal("Item 1"));
+    }
+
 }
