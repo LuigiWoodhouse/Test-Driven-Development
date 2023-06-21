@@ -64,4 +64,24 @@ public class CatalogTest {
         log.info("Return Method testIncreaseItemQuantity {}", catalog.getItemQuantity(item.getQty()));
     }
 
+    @Test
+    public void testDecreaseItemQuantity() {
+
+        log.trace("Enter Method testDecreaseItemQuantity");
+        Catalog catalog = new Catalog();
+
+        //Instantiate a sample item
+        Item item = new Item("Item 3", 23.45, 3);
+
+        // Add the item to the cart
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+        log.info("Item is added to cart:{}", item.getName());
+
+        catalog.decreaseItemQuantity(item.getQty());
+        log.info("Decrease the qty of the item:{}", item.getQty());
+
+        // Check that the item quantity has been decreased
+        Assert.assertEquals(1, catalog.getItemQuantity(item.getQty()));
+        log.info("Return Method testDecreaseItemQuantity {}", item.getQty());
+    }
 }

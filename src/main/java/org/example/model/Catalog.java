@@ -33,6 +33,18 @@ public class Catalog {
             itemInc.put(item, currentQuantity + 1);
         }
     }
+    public void decreaseItemQuantity(Integer item) {
+        if (itemInc.containsKey(item)) {
+            int currentQuantity = itemInc.get(item);
+            if (currentQuantity > 1) {
+                itemInc.put(item, currentQuantity - 1);
+            }
+            //if item is below 1 remove it from the cart
+            else if (currentQuantity < 1) {
+                itemInc.remove(item);
+            }
+        }
+    }
     public int getItemQuantity(int item) {
         return itemInc.getOrDefault(item, 0);
     }
