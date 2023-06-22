@@ -1,11 +1,35 @@
 import lombok.extern.slf4j.Slf4j;
+import org.example.impl.EmailServiceMock;
 import org.example.model.Catalog;
+import org.example.model.Customer;
 import org.example.model.Item;
+import org.example.model.PaymentGateway;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
+
 
 @Slf4j
 public class CatalogTest {
+
+    private PaymentGateway paymentGateway;
+
+    private EmailServiceMock emailServiceMock;
+
+    @BeforeEach
+    public void setUp() {
+        // Create a new instance of PaymentPrompt and EmailServiceMock before each test
+        paymentGateway = new PaymentGateway();
+        emailServiceMock = new EmailServiceMock();
+        paymentGateway.setEmailService(emailServiceMock);
+    }
 
     @Test
     public void testSelectItemFromCatalog() {
@@ -123,7 +147,87 @@ public class CatalogTest {
         double actual = catalog.getItemTotal("Item 1");
         double delta = 0.000001;
         Assert.assertEquals(expected, actual, delta);
-        log.info("Return Method costPerItem: itemName={} itemPrice={}" , catalog.getItemTotal("Item 1"));
+        log.info("Return Method costPerItem: itemPrice={}" , catalog.getItemTotal("Item 1"));
     }
 
+    @Test
+    public void testTotalCostInSubtotal() {
+
+        Catalog catalog = new Catalog();
+
+        Item item1 = new Item("Item 1", 22.30, 1);
+
+        Item item2 = new Item("Item 2", 22.45, 1);
+
+        // Add the item to the cart
+        catalog.addItem(item1.getName(), item1.getPrice(), item1.getQty());
+        log.info("Enter Method testTotalCostInSubtotal: itemName={} itemPrice={}" , item1.getName(),item1.getPrice());
+
+        // Add the item to the cart
+        catalog.addItem(item1.getName(), item1.getPrice(), item1.getQty());
+        log.info("Enter Method testTotalCostInSubtotal: itemName={} itemPrice={}" , item1.getName(),item1.getPrice());
+
+        // Add the item to the cart
+        catalog.addItem(item2.getName(), item2.getPrice(), item2.getQty());
+        log.info("Enter Method testTotalCostInSubtotal: itemName={} itemPrice={}" , item2.getName(),item2.getPrice());
+
+        // Calculate the total cost in subtotal
+        double subtotal = 0.0;
+        for (Item item : catalog.getItems()) {
+            subtotal += item.getPrice();
+        }
+
+        // Check that the total cost in subtotal is correct
+        double expected = 22.30 * 2 + 22.45;
+        double actual = subtotal;
+        double delta = 0.000001;
+        Assert.assertEquals(expected, actual, delta);
+        log.info("Return Method testTotalCostInSubtotal: itemsTotal={}" , subtotal);
+    }
+
+    @Test
+    public void testUniqueCartForEachCustomer() {
+        // Create a list of customers
+        List<Customer> customers = new ArrayList<>();
+        customers.add(new Customer("Captain Jekka"));
+        customers.add(new Customer("Captain Bubba"));
+        customers.add(new Customer("Captain Iron Dog"));
+        customers.add(new Customer("Captain Jeppo"));
+
+        // Verify each customer has a unique cart
+        Set<Catalog> uniqueCarts = new HashSet<>();
+        for (Customer customer : customers) {
+            Catalog catalog = customer.getCatalog();
+            // Check if the cart is already in the set of unique carts
+            assertFalse(uniqueCarts.contains(customer));
+            uniqueCarts.add(catalog);
+        }
+        log.info("Return Method testUniqueCartForEachCustomer: {}", customers);
+    }
+
+
+    @Test
+    public void testPromptMessage() {
+
+        PaymentGateway paymentGateway = new PaymentGateway();
+
+        String expectedPromptMessage = "Please proceed with the payment.";
+
+        String actualPromptMessage = paymentGateway.getPaymentPromptMessage();
+
+        Assert.assertEquals(expectedPromptMessage, actualPromptMessage);
+    }
+
+    @Test
+    public void testIsPaymentSuccessful() {
+
+        PaymentGateway paymentGateway = new PaymentGateway();
+
+        boolean expectedPaymentSuccess = true;
+
+        //email sent after payment is processed
+        boolean actualPaymentSuccess = paymentGateway.processPayment();
+
+        Assert.assertEquals(expectedPaymentSuccess, actualPaymentSuccess);
+    }
 }

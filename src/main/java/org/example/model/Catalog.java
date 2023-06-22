@@ -1,14 +1,20 @@
 package org.example.model;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class Catalog {
 
     private Map<Integer, Integer> itemInc;
-    private List<Item> items;
+    private static List<Item> items;
+
+
+    private Map<String, Item> itemsMap = new HashMap<>();
     public Catalog() {
         items = new ArrayList<>();
         itemInc = new HashMap<>();
@@ -79,6 +85,18 @@ public class Catalog {
 
         // Return the total price
         return total;
+    }
+    public static List<Item> getItems() {
+        return items;
+    }
+
+    public boolean processPayment(double amount) {
+        // Simulate payment processing logic
+        // For the sake of this example, assume all payments are successful
+        // You can add your actual payment gateway integration code here
+
+        // Return true to indicate a successful payment
+        return true;
     }
 
 }
