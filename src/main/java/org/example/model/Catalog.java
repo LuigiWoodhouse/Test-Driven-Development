@@ -2,6 +2,7 @@ package org.example.model;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Catalog {
         items = new ArrayList<>();
         itemInc = new HashMap<>();
     }
-    public void addItem(String name, double price, int qty) {
+    public void addItem(String name, BigDecimal price, int qty) {
         Item item = new Item(name, price, qty);
         items.add(item);
         itemInc.put(qty, 1);
@@ -72,14 +73,14 @@ public class Catalog {
         return quantity;
     }
 
-    public double getItemTotal(String itemName) {
-        double total = 0.0;
+    public BigDecimal getItemTotal(String itemName) {
+      BigDecimal total = BigDecimal.valueOf(0.0);
 
         // Iterate over the items in the cart
         for (Item item : items) {
             // If the item name matches, add the price
             if (item.getName().equals(itemName)) {
-                total += item.getPrice() * item.getQty();
+                total = item.getPrice().multiply(BigDecimal.valueOf(item.getQty()));
             }
         }
 
@@ -98,5 +99,15 @@ public class Catalog {
         // Return true to indicate a successful payment
         return true;
     }
+
+    public BigDecimal calculateExpectedCost(double price, int quantity) {
+        BigDecimal itemPrice = BigDecimal.valueOf(price);
+        BigDecimal itemQuantity = BigDecimal.valueOf(quantity);
+        return itemPrice.multiply(itemQuantity);
+    }
+
+  public BigDecimal calculateOverallCost(BigDecimal subtotalItem1, BigDecimal subtotalItem2) {
+    return subtotalItem1.add(subtotalItem2);
+  }
 
 }
