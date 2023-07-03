@@ -14,4 +14,10 @@ public class Item {
         this.price = price;
         this.qty = qty;
     }
+
+    public Item(String name, double v, int qty) {
+        this.name = name;
+        this.price = BigDecimal.valueOf(v);
+        this.qty = qty;
+    }
 }

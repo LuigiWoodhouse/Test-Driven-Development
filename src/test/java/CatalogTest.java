@@ -33,125 +33,124 @@ public class CatalogTest {
 
 
 
-//    @Test
-//    public void testSelectItemFromCatalog() {
-//        Catalog catalog = new Catalog();
-//
-//        catalog.addItem("Item 1", 21.15, 1);
-//        catalog.addItem("Item 2", 22.30, 1);
-//        catalog.addItem("Item 3", 23.45, 1);
-//
-//        // Select an item from the catalog
-//        String selectedItem = catalog.selectItem(0);
-//
-//        // Check that the selected item matches the expected item
-//        Assert.assertEquals("Item 1", selectedItem);
-//
-//        // Print expected and actual values
-//        System.out.println("Expected: Item 1");
-//        System.out.println("Actual  : " + selectedItem);
-//    }
-//
-//
-//    @Test
-//    public void testAddToCart() {
-//        Catalog catalog = new Catalog();
-//
-//        Item item = new Item("Item 1", 22.30, 1);
-//
-//        // Add the item to the cart
-//        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
-//
-//
-//        // Check that the item was added to the cart
-//        Assert.assertTrue(catalog.containItems(item));
-//
-//        // Print expected and actual values
-//        System.out.println("Expected: Item 1");
-//        System.out.println("Actual  : " + item.getName());
-//    }
-//
-//    @Test
-//    public void testIncreaseItemQuantity() {
-//        Catalog catalog = new Catalog();
-//
-//        //Instantiate a sample item
-//        Item item = new Item("Item 3", 23.45, 1);
-//
-//        // Add the item to the cart
-//        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
-//
-//        catalog.increaseItemQuantity(item.getQty());
-//
-//        // Check that the item quantity has been increased
-//        Assert.assertEquals(2, catalog.getItemQuantity(item.getQty()));
-//
-//        // Print expected and actual values
-//        System.out.println("Expected:" +  2);
-//        System.out.println("Actual:" + catalog.getItemQuantity(item.getQty()));
-//    }
-//
-//    @Test
-//    public void testDecreaseItemQuantity() {
-//        Catalog catalog = new Catalog();
-//
-//        // Instantiate a sample item
-//        Item item = new Item("Item 3", 23.45, 2);
-//
-//        // Add the item to the catalog
-//        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
-//
-//        // Decrease the item quantity
-//        catalog.decreaseItemQuantity(item.getQty());
-//
-//        // Get the updated item quantity from the catalog
-//        int updatedQuantity = catalog.getItemQuantity(item.getQty());
-//
-//        // Check that the item quantity has been decreased to 1
-//        Assert.assertEquals(1, updatedQuantity);
-//
-//        // Print expected and actual values
-//        System.out.println("Expected: 1");
-//        System.out.println("Actual  : " + updatedQuantity);
-//    }
-//
-//
-//    @Test
-//    public void testIncreaseItemQuantityWithSameItem() {
-//        Catalog catalog = new Catalog();
-//
-//        catalog.addItem("Item 1", 21.15, 2);
-//        catalog.addItem("Item 1", 21.15, 2);
-//
-//        // Assert that the item quantity has been increased in the cart
-//        Assert.assertEquals(4, catalog.getItemQuantityByName("Item 1"));
-//
-//        // Print expected and actual values
-//        System.out.println("Expected: 4");
-//        System.out.println("Actual  : " + catalog.getItemQuantityByName("Item 1"));
-//    }
-//
-//    @Test
-//    public void costPerItem() {
-//
-//        Catalog catalog = new Catalog();
-//
-//        Item item = new Item("Item 1", 22.30, 3);
-//
-//        // Add the item to the cart
-//        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
-//
-//
-//       // double expected = 22.30 * 3;
-//        BigDecimal expected = catalog.calculateExpectedCost(item.getPrice(), item.getQty());
-//        BigDecimal actual = BigDecimal.valueOf(catalog.getItemTotal("Item 1"));
-//
-//        //double delta = 0.000001;
-//        Assert.assertEquals(expected, actual);
-//
-//        System.out.println("Expected: " + expected);
-//        System.out.println("Actual  : " + catalog.getItemTotal("Item 1"));
-//    }
+    @Test
+    public void testSelectItemFromCatalog() {
+        Catalog catalog = new Catalog();
+
+        catalog.addItem("Item 1", BigDecimal.valueOf(21.15), 1);
+        catalog.addItem("Item 2", BigDecimal.valueOf(22.30), 1);
+        catalog.addItem("Item 3", BigDecimal.valueOf(23.45), 1);
+
+        // Select an item from the catalog
+        String selectedItem = catalog.selectItem(0);
+
+        // Check that the selected item matches the expected item
+        Assert.assertEquals("Item 1", selectedItem);
+
+        // Print expected and actual values
+        System.out.println("Expected: Item 1");
+        System.out.println("Actual  : " + selectedItem);
+    }
+
+    @Test
+    public void testAddToCart() {
+        Catalog catalog = new Catalog();
+
+        Item item = new Item("Item 1", 22.30, 1);
+
+        // Add the item to the cart
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+
+
+        // Check that the item was added to the cart
+        Assert.assertTrue(catalog.containItems(item));
+
+        // Print expected and actual values
+        System.out.println("Expected: Item 1");
+        System.out.println("Actual  : " + item.getName());
+    }
+
+    @Test
+    public void testIncreaseItemQuantity() {
+        Catalog catalog = new Catalog();
+
+        //Instantiate a sample item
+        Item item = new Item("Item 3", 23.45, 1);
+
+        // Add the item to the cart
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+
+        catalog.increaseItemQuantity(item.getQty());
+
+        // Check that the item quantity has been increased
+        Assert.assertEquals(2, catalog.getItemQuantity(item.getQty()));
+
+        // Print expected and actual values
+        System.out.println("Expected:" +  2);
+        System.out.println("Actual:" + catalog.getItemQuantity(item.getQty()));
+    }
+
+    @Test
+    public void testDecreaseItemQuantity() {
+        Catalog catalog = new Catalog();
+
+        // Instantiate a sample item
+        Item item = new Item("Item 3", 23.45, 2);
+
+        // Add the item to the catalog
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+
+        // Decrease the item quantity
+        catalog.decreaseItemQuantity(item.getQty());
+
+        // Get the updated item quantity from the catalog
+        int updatedQuantity = catalog.getItemQuantity(item.getQty());
+
+        // Check that the item quantity has been decreased to 1
+        Assert.assertEquals(1, updatedQuantity);
+
+        // Print expected and actual values
+        System.out.println("Expected: 1");
+        System.out.println("Actual  : " + updatedQuantity);
+    }
+
+    @Test
+    public void testIncreaseItemQuantityWithSameItem() {
+        Catalog catalog = new Catalog();
+
+        catalog.addItem("Item 1", BigDecimal.valueOf(21.15), 2);
+        catalog.addItem("Item 1", BigDecimal.valueOf(21.15), 2);
+
+        // Assert that the item quantity has been increased in the cart
+        Assert.assertEquals(4, catalog.getItemQuantityByName("Item 1"));
+
+        // Print expected and actual values
+        System.out.println("Expected: 4");
+        System.out.println("Actual  : " + catalog.getItemQuantityByName("Item 1"));
+    }
+
+    @Test
+    public void costPerItem() {
+
+        Catalog catalog = new Catalog();
+
+        Item item = new Item("Item 1", 22.30, 3);
+
+        // Add the item to the cart
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+
+
+       // double expected = 22.30 * 3;
+        BigDecimal expected = catalog.calculateExpectedCost(item.getPrice(), item.getQty());
+        BigDecimal actual = catalog.getItemTotal(item.getName());
+
+
+        //double delta = 0.000001;
+        Assert.assertEquals(expected, actual);
+
+        System.out.println("Expected: " + expected);
+        System.out.println("Actual  : " + catalog.getItemTotal("Item 1"));
+    }
 
     @Test
     public void testTotalCostInSubtotal() {

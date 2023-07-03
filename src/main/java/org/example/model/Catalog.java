@@ -55,6 +55,10 @@ public class Catalog {
     public int getItemQuantity(int item) {
         return itemInc.getOrDefault(item, 0);
     }
+//    public boolean containItems(String item) {
+//        return items.contains(item);
+//    }
+
     public boolean containItems(Item item) {
         return items.contains(item);
     }
@@ -100,13 +104,19 @@ public class Catalog {
         return true;
     }
 
-    public BigDecimal calculateExpectedCost(double price, int quantity) {
-        BigDecimal itemPrice = BigDecimal.valueOf(price);
+//    public BigDecimal calculateExpectedCost(BigDecimal price, int quantity) {
+//        BigDecimal itemPrice = BigDecimal.valueOf(price);
+//        BigDecimal itemQuantity = BigDecimal.valueOf(quantity);
+//        return itemPrice.multiply(itemQuantity);
+//    }
+
+    public BigDecimal calculateExpectedCost(BigDecimal price, int quantity) {
         BigDecimal itemQuantity = BigDecimal.valueOf(quantity);
-        return itemPrice.multiply(itemQuantity);
+        return price.multiply(itemQuantity);
     }
 
-  public BigDecimal calculateOverallCost(BigDecimal subtotalItem1, BigDecimal subtotalItem2) {
+
+    public BigDecimal calculateOverallCost(BigDecimal subtotalItem1, BigDecimal subtotalItem2) {
     return subtotalItem1.add(subtotalItem2);
   }
 
