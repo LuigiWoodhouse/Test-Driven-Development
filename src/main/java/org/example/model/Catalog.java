@@ -27,19 +27,31 @@ public class Catalog {
     }
 
     public String selectItem(int index) {
-        if (index >= 0 && index < items.size()) {
-            return items.get(index).getName();
+        try {
+            if (index >= 0 && index < items.size()) {
+                return items.get(index).getName();
+            }
+        } catch (IndexOutOfBoundsException e) {
+            // Handle the exception
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
-    public void increaseItemQuantity(Integer item) {
-        if (itemInc.containsKey(item)) {
-            int currentQuantity = itemInc.get(item);
-            itemInc.put(item, currentQuantity + 1);
+
+    public boolean increaseItemQuantity(Integer itemQty) {
+        boolean itemFound = false;
+        for (Item item : items) {
+            if (item.getQty() == itemQty) {
+                int currentQuantity = itemInc.get(itemQty);
+                itemInc.put(itemQty, currentQuantity + 1);
+                itemFound = true;
+                break;
+            }
         }
+        return itemFound;
     }
+
+
     public void decreaseItemQuantity(Integer item) {
         if (itemInc.containsKey(item)) {
             int currentQuantity = itemInc.get(item);
@@ -103,12 +115,6 @@ public class Catalog {
         // Return true to indicate a successful payment
         return true;
     }
-
-//    public BigDecimal calculateExpectedCost(BigDecimal price, int quantity) {
-//        BigDecimal itemPrice = BigDecimal.valueOf(price);
-//        BigDecimal itemQuantity = BigDecimal.valueOf(quantity);
-//        return itemPrice.multiply(itemQuantity);
-//    }
 
     public BigDecimal calculateExpectedCost(BigDecimal price, int quantity) {
         BigDecimal itemQuantity = BigDecimal.valueOf(quantity);
