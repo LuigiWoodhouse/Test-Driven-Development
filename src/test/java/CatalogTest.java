@@ -1,4 +1,5 @@
 import lombok.extern.slf4j.Slf4j;
+import org.example.exception.ItemNotFoundException;
 import org.example.impl.EmailServiceMock;
 import org.example.model.Catalog;
 import org.example.model.Customer;
@@ -6,6 +7,8 @@ import org.example.model.Item;
 import org.example.model.PaymentGateway;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.data.crossstore.ChangeSetPersister;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +146,7 @@ public class CatalogTest {
         System.out.println("Actual: " + quantityIncreased);
     }
     @Test
-    public void testDecreaseItemQuantity() {
+    public void decrease_Item_Quantity_Return_Success() {
         Catalog catalog = new Catalog();
 
         // Instantiate a sample item
@@ -156,14 +159,38 @@ public class CatalogTest {
         catalog.decreaseItemQuantity(item.getQty());
 
         // Get the updated item quantity from the catalog
-        int updatedQuantity = catalog.getItemQuantity(item.getQty());
+        //int updatedQuantity = catalog.getItemQuantity(item.getQty());
 
         // Check that the item quantity has been decreased to 1
-        assertEquals(1, updatedQuantity);
+        assertEquals(1,  catalog.getItemQuantity(item.getQty()));
 
         // Print expected and actual values
         System.out.println("Expected: 1");
-        System.out.println("Actual  : " + updatedQuantity);
+        System.out.println("Actual  : " +  catalog.getItemQuantity(item.getQty()));
+    }
+
+    @Test
+    public void decrease_Item_Quantity_Return_Not_Found() {
+        Catalog catalog = new Catalog();
+
+        // Instantiate a sample item
+        Item item = new Item("Item 3", 23.45, 2);
+
+        // Add the item to the catalog
+        catalog.addItem(item.getName(), item.getPrice(), item.getQty());
+
+
+        boolean quantityDecreased = catalog.decreaseItemQuantity(1);
+
+        // Get the updated item quantity from the catalog
+        //int updatedQuantity = catalog.getItemQuantity(item.getQty());
+
+        // Check that the item quantity has been decreased to 1
+        assertFalse(quantityDecreased);
+
+        // Print expected and actual values
+        System.out.println("Expected: false");
+        System.out.println("Actual  : " +  quantityDecreased);
     }
 
     @Test
@@ -182,7 +209,7 @@ public class CatalogTest {
     }
 
     @Test
-    public void costPerItem() {
+    public void cost_Per_Item_Return_Success() {
 
         Catalog catalog = new Catalog();
 
@@ -203,6 +230,21 @@ public class CatalogTest {
         System.out.println("Expected: " + expected);
         System.out.println("Actual  : " + catalog.getItemTotal("Item 1"));
     }
+
+    @Test
+    public void cost_Per_Item_Return_Not_Found() {
+        Catalog catalog = new Catalog();
+        Item item = new Item("Item 1", 22.30, 3);
+
+        // Add a different item to the cart
+        catalog.addItem("Item 2", BigDecimal.valueOf(10.50), 2);
+
+        // Test for nonexistent item
+        assertThrows(ItemNotFoundException.class, () -> {
+            catalog.getItemTotal(item.getName());
+        });
+    }
+
 
     @Test
     public void testTotalCostInSubtotal() {
