@@ -2,7 +2,7 @@ package org.example.model;
 
 
 import lombok.Data;
-
+import org.example.impl.CatalogServiceImpl;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,17 +10,18 @@ import java.util.Set;
 @Data
 public class Customer {
     private String name;
-    private Catalog catalog;
+    private CatalogServiceImpl catalogServiceImpl;
     private Cart cart;
 
-    public Catalog getCatalog() {
-        return catalog;
-    }
+    private String email;
 
+    public Customer(){
+
+    }
 
     public Customer(String name) {
         this.name = name;
-        this.catalog = new Catalog();
+        this.catalogServiceImpl = new CatalogServiceImpl();
         this.cart =  new Cart();
     }
 

@@ -1,7 +1,11 @@
 package org.example.service;
 
+import org.example.model.Customer;
+
 public interface EmailService {
-    void sendEmail(String recipient, String subject, String message);
+
+    Customer sendPaymentSuccessfulEmail(Customer customer);
+
 }
 
 

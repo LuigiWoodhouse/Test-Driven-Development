@@ -1,6 +1,10 @@
-package org.example.model;
+package org.example.impl;
 
 import lombok.Data;
+import org.example.exception.ItemNotFoundException;
+import org.example.model.Item;
+import org.example.service.CatalogService;
+import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,23 +13,26 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class Catalog {
+public class CatalogServiceImpl implements CatalogService {
 
     private Map<Integer, Integer> itemInc;
     private static List<Item> items;
 
 
     private Map<String, Item> itemsMap = new HashMap<>();
-    public Catalog() {
+    public CatalogServiceImpl() {
         items = new ArrayList<>();
         itemInc = new HashMap<>();
     }
+
+    @Override
     public void addItem(String name, BigDecimal price, int qty) {
         Item item = new Item(name, price, qty);
         items.add(item);
         itemInc.put(qty, 1);
     }
 
+    @Override
     public String selectItem(int index) {
         try {
             if (index >= 0 && index < items.size()) {
@@ -38,6 +45,7 @@ public class Catalog {
         return null;
     }
 
+    @Override
     public boolean increaseItemQuantity(Integer itemQty) {
         boolean itemFound = false;
         for (Item item : items) {
@@ -51,6 +59,7 @@ public class Catalog {
         return itemFound;
     }
 
+    @Override
     public boolean decreaseItemQuantity(Integer itemQty) {
         boolean itemFound = false;
         for (Item item : items) {
@@ -77,6 +86,8 @@ public class Catalog {
 //            }
 //        }
 //    }
+
+    @Override
     public int getItemQuantity(int item) {
         return itemInc.getOrDefault(item, 0);
     }
@@ -84,10 +95,14 @@ public class Catalog {
 //        return items.contains(item);
 //    }
 
+
+    @Override
     public boolean containItems(Item item) {
         return items.contains(item);
     }
 
+
+    @Override
     public int getItemQuantityByName(String itemName) {
         int quantity = 0;
 
@@ -102,20 +117,22 @@ public class Catalog {
         return quantity;
     }
 
-    public BigDecimal getItemTotal(String itemName) {
-      BigDecimal total = BigDecimal.valueOf(0.0);
 
-        // Iterate over the items in the cart
+    @Override
+    public BigDecimal getItemTotal(String itemName) throws ItemNotFoundException {
+        BigDecimal total = BigDecimal.valueOf(0.0);  // Initialize total to zero
+
         for (Item item : items) {
-            // If the item name matches, add the price
             if (item.getName().equals(itemName)) {
                 total = item.getPrice().multiply(BigDecimal.valueOf(item.getQty()));
+                return total;  // Return total immediately if item is found
             }
         }
 
-        // Return the total price
-        return total;
+        // If item is not found, throw an ItemNotFoundException
+        throw new ItemNotFoundException(HttpStatus.NOT_FOUND.value(), "Item not found");
     }
+
     public static List<Item> getItems() {
         return items;
     }

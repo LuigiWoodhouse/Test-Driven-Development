@@ -1,16 +1,17 @@
 package org.example.exception;
 
+import lombok.Data;
+
+@Data
 public class ItemNotFoundException extends Exception {
 
-    public ItemNotFoundException() {
-        super();
-    }
 
-    public ItemNotFoundException(String message) {
+    private static final long serialVersionUID = 1L;
+
+    private int code;
+
+    public ItemNotFoundException(int code, String message) {
         super(message);
-    }
-
-    public ItemNotFoundException(String message, Throwable cause) {
-        super(message, cause);
+        this.code = code;
     }
 }
