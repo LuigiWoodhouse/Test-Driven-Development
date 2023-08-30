@@ -133,7 +133,7 @@ public class CatalogServiceImpl implements CatalogService {
         throw new ItemNotFoundException(HttpStatus.NOT_FOUND.value(), "Item not found");
     }
 
-    public static List<Item> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 

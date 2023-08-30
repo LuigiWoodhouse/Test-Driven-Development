@@ -20,4 +20,7 @@ public class Item {
         this.price = BigDecimal.valueOf(v);
         this.qty = qty;
     }
+
+    public Item(String s, double v) {
+    }
 }

@@ -8,7 +8,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 @Slf4j
 public class CatalogServiceImplTest {
@@ -257,7 +259,6 @@ public class CatalogServiceImplTest {
         System.out.println("Expected: " + expected);
         System.out.println("Actual  : " + totalCost);
     }
-
     @Test
     public void testUniqueCartForEachCustomer() {
         // Create a list of customers
