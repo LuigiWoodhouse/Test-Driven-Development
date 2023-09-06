@@ -1,6 +1,7 @@
+package org.example.impl;
+
 import lombok.extern.slf4j.Slf4j;
 import org.example.exception.ItemNotFoundException;
-import org.example.impl.CatalogServiceImpl;
 import org.example.model.Customer;
 import org.example.model.Item;
 import org.junit.Test;

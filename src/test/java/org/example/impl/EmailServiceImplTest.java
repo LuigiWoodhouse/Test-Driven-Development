@@ -1,29 +1,24 @@
-import org.example.impl.CatalogServiceImpl;
-import org.example.impl.EmailServiceImpl;
+package org.example.impl;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.example.model.Customer;
-import org.example.model.Item;
+import org.example.service.PaymentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 public class EmailServiceImplTest {
@@ -33,9 +28,6 @@ public class EmailServiceImplTest {
 
     @Mock
     private JavaMailSender javaMailSender;
-
-    @InjectMocks
-    CatalogServiceImpl catalogServiceImpl;
 
     @Before
     public void setup() {
@@ -66,14 +58,12 @@ public class EmailServiceImplTest {
         // Ensure that the method returns the same customer object
         assertEquals(customer, result);
     }
-
     @Test
-    public void send_Payment_Email_Return_500() throws MessagingException, UnsupportedEncodingException {
+    public void send_Payment_Email_Return_500() {
 
         Customer customer = new Customer();
         customer.setName("John Doe");
         customer.setEmail("johndoe@example.com");
-
 
         when(emailServiceImplMock.sendPaymentSuccessfulEmail(customer))
                 .thenThrow(new RuntimeException("Failed to send verification email"));
@@ -99,10 +89,8 @@ public class EmailServiceImplTest {
         when(catalogServiceMock.calculateOverallCost(any(BigDecimal.class), any(BigDecimal.class)))
                 .thenReturn(BigDecimal.valueOf(105.0));
 
-        // Your test logic that uses the mock
         BigDecimal expectedPayment = BigDecimal.valueOf(105.0);
 
-        // For example, you might call a method that uses the mocked behavior
         BigDecimal actualPayment = catalogServiceMock.calculateOverallCost(
                 catalogServiceMock.getItemTotal("Item 1"),
                 catalogServiceMock.getItemTotal("Item 2"));
@@ -113,6 +101,9 @@ public class EmailServiceImplTest {
 
         // Assertions or further verifications
         assertEquals(expectedPayment, actualPayment);
-
     }
+
+
+
+
 }
