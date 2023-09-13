@@ -3,7 +3,6 @@ package org.example.impl;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.example.model.Customer;
-import org.example.service.PaymentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -102,8 +101,4 @@ public class EmailServiceImplTest {
         // Assertions or further verifications
         assertEquals(expectedPayment, actualPayment);
     }
-
-
-
-
 }
