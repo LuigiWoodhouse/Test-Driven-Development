@@ -8,11 +8,14 @@ import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PaymentServiceImplTest {
@@ -25,6 +28,8 @@ public class PaymentServiceImplTest {
     @Mock
     CardRepository cardRepository;
 
+    PaymentServiceImpl paymentServiceImplMock = mock(PaymentServiceImpl.class);
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -32,7 +37,7 @@ public class PaymentServiceImplTest {
 
 
     @Test
-    public void submit_Card_Info_Return_Card() {
+    public void submit_Card_Info_Return_200() {
         Card cardDetails = new Card();
         cardDetails.setCardNumber("4242424242424242");
         cardDetails.setCardHolderName("Captain Iron Dog");
@@ -47,6 +52,28 @@ public class PaymentServiceImplTest {
 
         // Assert the logic in the service
         assertEquals(cardDetails, actualCardDetails);
+    }
+
+    @Test
+    public void submit_Card_Info_Return_500() {
+        Card cardDetails = new Card();
+        cardDetails.setCardNumber("4242424242424242");
+        cardDetails.setCardHolderName("Captain Iron Dog");
+        cardDetails.setExpirationDate("01/23");
+        cardDetails.setCvv("123");
+
+
+        Mockito.when(paymentServiceImplMock.submitCardDetails(Mockito.any(Card.class)))
+                .thenThrow(new RuntimeException("Failed to submit card"));
+
+
+        Exception exception = assertThrows(RuntimeException.class, ()
+                -> paymentServiceImplMock.submitCardDetails(cardDetails));
+
+        assertEquals("Failed to submit card", exception.getMessage());
+
+        System.out.println("Expected=Failed to submit card");
+        System.out.println("Actual=" + exception.getMessage());
     }
     @Test
     public void process_Payment_Return_200() {
