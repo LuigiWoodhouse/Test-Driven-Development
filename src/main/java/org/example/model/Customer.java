@@ -1,41 +1,27 @@
 package org.example.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.impl.CatalogServiceImpl;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 public class Customer {
+    private String id;
     private String name;
-    private CatalogServiceImpl catalogServiceImpl;
-    private Cart cart;
-
+    private String cart;
     private String email;
-
     private String address;
 
-    public Customer(){
 
-    }
-
-    public Customer(String name) {
-        this.name = name;
-        this.catalogServiceImpl = new CatalogServiceImpl();
-        this.cart =  new Cart();
-    }
-
-    public static boolean checkUniqueCarts(List<Customer> customers) {
-        Set<Customer> uniqueCustomers = new HashSet<>();
-        for (Customer customer : customers) {
-            if (uniqueCustomers.contains(customer)) {
-                return false;
-            }
-            uniqueCustomers.add(customer);
-        }
-        return true;
+    public Customer(String cart) {
+        this.cart = cart;
     }
 }
-

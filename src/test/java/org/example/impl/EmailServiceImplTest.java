@@ -77,28 +77,4 @@ public class EmailServiceImplTest {
         System.out.println("Expected: Failed to send verification email");
         System.out.println("Actual  : " + exception.getMessage());
     }
-
-    @Test
-    public void make_Payment_Return_200() throws Exception {
-        CatalogServiceImpl catalogServiceMock = mock(CatalogServiceImpl.class);
-
-        // Stub the behavior of the methods on the mock
-        when(catalogServiceMock.getItemTotal("Item 1")).thenReturn(new BigDecimal("60"));
-        when(catalogServiceMock.getItemTotal("Item 2")).thenReturn(new BigDecimal("45"));
-        when(catalogServiceMock.calculateOverallCost(any(BigDecimal.class), any(BigDecimal.class)))
-                .thenReturn(BigDecimal.valueOf(105.0));
-
-        BigDecimal expectedPayment = BigDecimal.valueOf(105.0);
-
-        BigDecimal actualPayment = catalogServiceMock.calculateOverallCost(
-                catalogServiceMock.getItemTotal("Item 1"),
-                catalogServiceMock.getItemTotal("Item 2"));
-
-        // Output the expected and actual payments
-        System.out.println("Expected: " + expectedPayment);
-        System.out.println("Actual  : " + actualPayment);
-
-        // Assertions or further verifications
-        assertEquals(expectedPayment, actualPayment);
-    }
 }

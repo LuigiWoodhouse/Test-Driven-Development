@@ -1,10 +1,14 @@
 package org.example.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.exception.InvalidCardException;
 import org.example.model.Card;
 import org.example.repository.CardRepository;
+import org.example.service.CardValidationService;
 import org.example.service.PaymentService;
+import org.example.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 @Service
 @Slf4j
@@ -14,10 +18,18 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     CardRepository cardRepository;
 
+    @Autowired
+    CardValidationService cardValidationService;
+
     @Override
-    public Card submitCardDetails(Card cardDetails) {
+    public Card submitCardDetails(Card cardDetails) throws InvalidCardException {
         log.trace("Enter Method submitCardDetails: Card Details:{}", cardDetails);
 
+        // Validate the card details
+        if (!cardValidationService.isCardValid(cardDetails)) {
+            log.error("Card details are not valid. Cannot submit.");
+            throw new InvalidCardException(HttpStatus.BAD_REQUEST.value(), Constants.INVALID_CARD);
+        }
         try{
             Card card = new Card();
 

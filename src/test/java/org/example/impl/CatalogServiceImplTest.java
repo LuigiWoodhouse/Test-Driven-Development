@@ -15,10 +15,10 @@ import static org.junit.Assert.assertTrue;
 
 @Slf4j
 public class CatalogServiceImplTest {
-
+    CatalogServiceImpl catalogServiceImpl = new CatalogServiceImpl();
     @Test
     public void select_Item_From_Catalog_Return_Success() {
-        CatalogServiceImpl catalogServiceImpl = new CatalogServiceImpl();
+
 
         catalogServiceImpl.addItem("Item 1", BigDecimal.valueOf(21.15), 1);
         catalogServiceImpl.addItem("Item 2", BigDecimal.valueOf(22.30), 1);
@@ -262,16 +262,17 @@ public class CatalogServiceImplTest {
     }
     @Test
     public void testUniqueCartForEachCustomer() {
-        // Create a list of customers
+        // Create a list of customers with unique carts
         List<Customer> customers = new ArrayList<>();
-        customers.add(new Customer("Captain Jekka"));
-        customers.add(new Customer("Captain Bubba"));
-        customers.add(new Customer("Captain Iron Dog"));
-        customers.add(new Customer("Captain Jeppo"));
+        customers.add(new Customer("cart1"));  // Ensure unique cart identifiers for each customer
+        customers.add(new Customer("cart2"));
+        customers.add(new Customer("cart3"));
+        customers.add(new Customer("cart4"));
 
         // Verify each customer has a unique cart
-        boolean result = Customer.checkUniqueCarts(customers);
+        boolean result = CatalogServiceImpl.checkUniqueCarts(customers);
         System.out.println("Test result: " + result);
         assertTrue(result);
     }
+
 }

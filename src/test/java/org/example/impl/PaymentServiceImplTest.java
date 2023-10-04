@@ -1,22 +1,29 @@
 package org.example.impl;
 
+import org.example.exception.InvalidCardException;
 import org.example.model.Card;
 import org.example.repository.CardRepository;
+import org.example.service.CardValidationService;
 import org.example.service.PaymentService;
-import org.junit.Before;
-import org.junit.Test;
+import org.example.utils.Constants;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 
 public class PaymentServiceImplTest {
 
@@ -28,16 +35,19 @@ public class PaymentServiceImplTest {
     @Mock
     CardRepository cardRepository;
 
+    @Mock
+    CardValidationService cardValidationService;
+
     PaymentServiceImpl paymentServiceImplMock = mock(PaymentServiceImpl.class);
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
     }
 
 
     @Test
-    public void submit_Card_Info_Return_200() {
+    public void submit_Card_Info_Return_200() throws InvalidCardException {
         Card cardDetails = new Card();
         cardDetails.setCardNumber("4242424242424242");
         cardDetails.setCardHolderName("Captain Iron Dog");
@@ -47,6 +57,7 @@ public class PaymentServiceImplTest {
         // Mock the behavior of the CardRepository save method
         when(cardRepository.save(any(Card.class))).thenReturn(cardDetails);
 
+        when(cardValidationService.isCardValid(cardDetails)).thenReturn(true);
         // Call the service method
         Card actualCardDetails = paymentServiceImpl.submitCardDetails(cardDetails);
 
@@ -55,7 +66,27 @@ public class PaymentServiceImplTest {
     }
 
     @Test
-    public void submit_Card_Info_Return_500() {
+    public void submit_Card_Info_Return_400() throws InvalidCardException {
+        Card cardDetails = new Card();
+        cardDetails.setCardNumber("4242424242424242");
+        cardDetails.setCardHolderName("Captain Iron Dog");
+        cardDetails.setExpirationDate("01/23");
+        cardDetails.setCvv("123");
+
+        when(cardValidationService.isCardValid(cardDetails)).thenReturn(false);
+        // Call the service method
+        InvalidCardException exception = assertThrows(InvalidCardException.class, () -> {
+            paymentServiceImpl.submitCardDetails(cardDetails);
+        });
+
+        assertEquals(400, exception.getCode());
+
+        System.out.println("Expected=" + Constants.INVALID_CARD);
+        System.out.println("Actual =" + exception.getMessage());
+    }
+
+    @Test
+    public void submit_Card_Info_Return_500() throws InvalidCardException {
         Card cardDetails = new Card();
         cardDetails.setCardNumber("4242424242424242");
         cardDetails.setCardHolderName("Captain Iron Dog");
@@ -85,5 +116,37 @@ public class PaymentServiceImplTest {
         boolean paymentResult = paymentServiceImpl.processPayment(amount);
 
         assertTrue(paymentResult);
+    }
+    @Test
+    public void make_Payment_Return_200() throws Exception {
+        CatalogServiceImpl catalogServiceMock = mock(CatalogServiceImpl.class);
+
+        // Stub the behavior of the methods on the mock
+        when(catalogServiceMock.getItemTotal("Item 1")).thenReturn(new BigDecimal("60"));
+        when(catalogServiceMock.getItemTotal("Item 2")).thenReturn(new BigDecimal("45"));
+        when(catalogServiceMock.calculateOverallCost(any(BigDecimal.class), any(BigDecimal.class)))
+                .thenReturn(BigDecimal.valueOf(105.0));
+
+        BigDecimal expectedPayment = BigDecimal.valueOf(105.0);
+
+        BigDecimal actualPayment = catalogServiceMock.calculateOverallCost(
+                catalogServiceMock.getItemTotal("Item 1"),
+                catalogServiceMock.getItemTotal("Item 2"));
+
+        // Output the expected and actual payments
+        System.out.println("Expected: " + expectedPayment);
+        System.out.println("Actual  : " + actualPayment);
+
+        // Assertions or further verifications
+        assertEquals(expectedPayment, actualPayment);
+    }
+    @Test
+    public void process_Payment_Return_Not_Successful() {
+
+        when(paymentService.makePayment(anyDouble())).thenReturn(false);
+
+        boolean paymentResult = paymentServiceImpl.processPayment(anyDouble());
+
+        assertFalse(paymentResult);
     }
 }

@@ -2,6 +2,7 @@ package org.example.impl;
 
 import lombok.Data;
 import org.example.exception.ItemNotFoundException;
+import org.example.model.Customer;
 import org.example.model.Item;
 import org.example.service.CatalogService;
 import org.springframework.http.HttpStatus;
@@ -9,8 +10,10 @@ import org.springframework.http.HttpStatus;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Data
 public class CatalogServiceImpl implements CatalogService {
@@ -155,5 +158,18 @@ public class CatalogServiceImpl implements CatalogService {
     public BigDecimal calculateOverallCost(BigDecimal subtotalItem1, BigDecimal subtotalItem2) {
     return subtotalItem1.add(subtotalItem2);
   }
+
+    public static boolean checkUniqueCarts(List<Customer> customers) {
+        Set<Customer> uniqueCustomers = new HashSet<>();
+        for (Customer customer : customers) {
+            System.out.println("Customer: " + customer.getId() + ", Cart: " + customer.getCart());
+
+            if (uniqueCustomers.contains(customer)) {
+                return false;
+            }
+            uniqueCustomers.add(customer);
+        }
+        return true;
+    }
 
 }
