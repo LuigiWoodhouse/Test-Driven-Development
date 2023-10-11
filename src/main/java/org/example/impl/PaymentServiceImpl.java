@@ -59,20 +59,26 @@ public class PaymentServiceImpl implements PaymentService {
             return false;
         }
     }
+
     @Override
     public boolean processPayment(double amount) {
         log.trace("Enter Method processPayment: {}", amount);
 
         boolean paymentSuccessful = makePayment(amount);
 
-        if (paymentSuccessful) {
-            String receiptMessage = "Payment Successful. Thank you!";
-            log.info("Return Method processPayment: Payment is successful: amount={}, receiptMessage={}", amount,receiptMessage);
-            return true;
+        try {
+            if (paymentSuccessful) {
+                String receiptMessage = "Payment Successful. Thank you!";
+                log.info("Return Method processPayment: Payment is successful: amount={}, receiptMessage={}", amount, receiptMessage);
+                return true;
+            } else {
+                log.error("Return Method processPayment: Payment is unsuccessful");
+                return false;
+            }
         }
-        else{
-            log.error("Return Method processPayment: Payment is unsuccessful");
-            return false;
+        catch (Exception e) {
+            log.error("Return Method processPayment: an error occurred when processing payment", e);
+            throw new RuntimeException("Failed to process payment");
         }
     }
 }

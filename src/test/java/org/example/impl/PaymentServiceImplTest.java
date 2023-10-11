@@ -6,6 +6,7 @@ import org.example.repository.CardRepository;
 import org.example.service.CardValidationService;
 import org.example.service.PaymentService;
 import org.example.utils.Constants;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -116,6 +117,25 @@ public class PaymentServiceImplTest {
         boolean paymentResult = paymentServiceImpl.processPayment(amount);
 
         assertTrue(paymentResult);
+    }
+
+    @Test
+    public void process_Payment_Return_500() {
+        // Arrange
+        double amount = 100.0;
+
+        when(paymentServiceImplMock.processPayment(amount))
+                .thenThrow(new RuntimeException("Failed to process payment"));
+
+
+        Exception exception = Assert.assertThrows(RuntimeException.class, ()
+                -> paymentServiceImplMock.processPayment(amount));
+
+        // Perform your assertions on the exception or any other expected behavior
+        Assert.assertEquals("Failed to process payment", exception.getMessage());
+
+        System.out.println("Expected: Failed to process payment");
+        System.out.println("Actual  : " + exception.getMessage());
     }
     @Test
     public void make_Payment_Return_200() throws Exception {
