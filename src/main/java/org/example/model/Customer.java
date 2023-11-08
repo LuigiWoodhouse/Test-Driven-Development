@@ -1,16 +1,7 @@
 package org.example.model;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.example.impl.CatalogServiceImpl;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 public class Customer {

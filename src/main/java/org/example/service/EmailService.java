@@ -1,6 +1,7 @@
 package org.example.service;
 
+import org.example.exception.OrderNotFoundException;
 import org.example.model.Customer;
 public interface EmailService {
-    Customer sendPaymentSuccessfulEmail(Customer customer);
+    String sendPaymentSuccessfulEmail(String orderNumber) throws OrderNotFoundException;
 }

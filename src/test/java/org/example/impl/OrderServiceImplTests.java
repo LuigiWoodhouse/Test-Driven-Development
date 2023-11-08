@@ -1,7 +1,9 @@
 package org.example.impl;
 
+import org.example.exception.OrderNotFoundException;
 import org.example.model.Order;
 import org.example.repository.OrderRepository;
+import org.example.service.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,6 +13,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,6 +25,9 @@ public class OrderServiceImplTests {
     @Mock
     OrderRepository orderRepository;
 
+    @Mock
+    EmailService emailService;
+
     OrderServiceImpl orderServiceImplMock = mock(OrderServiceImpl.class);
 
     @BeforeEach
@@ -30,11 +36,13 @@ public class OrderServiceImplTests {
     }
 
     @Test
-    public void customer_Order_Return_200(){
+    public void customer_Order_Return_200() throws OrderNotFoundException {
 
         Order newOrder = new Order();
         newOrder.setOrderAmount(new BigDecimal(5000.50));
-        newOrder.setCustomerName("order.getCustomerName()");
+        newOrder.setCardHolderName("order.getCustomerName()");
+
+        when(emailService.sendPaymentSuccessfulEmail(newOrder.getOrderNumber())).thenReturn(newOrder.getEmail());
 
         when(orderRepository.save(any(Order.class))).thenReturn(newOrder);
 
@@ -48,7 +56,7 @@ public class OrderServiceImplTests {
 
         Order newOrder = new Order();
         newOrder.setOrderAmount(new BigDecimal(5000.50));
-        newOrder.setCustomerName("order.getCustomerName()");
+        newOrder.setCardHolderName("order.getCustomerName()");
 
         doThrow(new RuntimeException("Failed to make customer order"))
                 .when(orderServiceImplMock)

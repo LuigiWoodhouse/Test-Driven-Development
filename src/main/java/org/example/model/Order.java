@@ -27,6 +27,9 @@ public class Order {
     @Column(name = "order_amount")
     private BigDecimal orderAmount;
 
-    @Column(name = "customer_name")
-    private String customerName;
+    @Column(name = "cardHolderName")
+    private String cardHolderName;
+
+    @Column(name = "email")
+    private String email;
 }
