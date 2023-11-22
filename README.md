@@ -12,3 +12,5 @@ to pull in the dependencies
 Edit & Debug Congurations/Debug & Run class
 
 Java 17 Oracle OpenJDK version 17
+
+A Dockerfile is included in this project
