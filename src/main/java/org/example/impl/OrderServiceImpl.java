@@ -45,16 +45,18 @@ public class OrderServiceImpl implements OrderService {
 
             newOrder.setOrderAmount(order.getOrderAmount());
             newOrder.setCardHolderName(order.getCardHolderName());
-            newOrder.setEmail(order.getEmail());
-            newOrder.setShippingAddress(order.getShippingAddress());
-            newOrder.setBillingAddress(order.getBillingAddress());
+            newOrder.setEmail(checkIfCustomerLoggedIn.getEmail());
+            newOrder.setShippingAddress(checkIfCustomerLoggedIn.getShippingAddress());
+            newOrder.setBillingAddress(checkIfCustomerLoggedIn.getBillingAddress());
             newOrder.setPhoneNumber(order.getPhoneNumber());
 
-            String customerReceipt = sendReceiptRegisteredCustomerEmail(newOrder.getCustomer(), newOrder.getOrderNumber());
 
             log.info("Return Method customerOrder: Order Was Successful: {}", newOrder);
-            emailService.sendPaymentSuccessfulEmail( newOrder.getOrderNumber());
-            return orderRepository.save(newOrder);
+            orderRepository.save(newOrder);
+           // String customerReceipt = sendReceiptRegisteredCustomerEmail(newOrder.getCustomer(), newOrder.getOrderNumber());
+
+            return newOrder;
+
         }
         catch (Exception e){
             log.error("Return Method customerOrder: an error occurred when making customer order", e);

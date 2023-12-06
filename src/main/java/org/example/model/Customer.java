@@ -10,6 +10,8 @@ public class Customer {
     private String cart;
     private String email;
     private String address;
+    private String shippingAddress;
+    private String billingAddress;
 
 
     public Customer(String cart) {

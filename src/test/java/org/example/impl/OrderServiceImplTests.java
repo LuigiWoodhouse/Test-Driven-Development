@@ -40,9 +40,6 @@ public class OrderServiceImplTests {
     @Mock
     JavaMailSender javaMailSender;
 
-    @Mock
-    EmailService emailService;
-
     String id = "Test";
 
     OrderServiceImpl orderServiceImplMock = mock(OrderServiceImpl.class);
@@ -53,14 +50,17 @@ public class OrderServiceImplTests {
     }
 
     @Test
-    public void customer_Order_Return_200() throws OrderNotFoundException, MessagingException, UnsupportedEncodingException {
+    public void customer_Order_Return_200() throws  MessagingException, UnsupportedEncodingException {
+
+        Customer customer = new Customer();
+        customer.setId("rtrg");
+        customer.setEmail("test@gmail.com");
 
         Order newOrder = new Order();
         newOrder.setOrderAmount(new BigDecimal(5000.50));
         newOrder.setCardHolderName("order.getCustomerName()");
+        newOrder.setEmail(customer.getEmail());
 
-        Customer customer = new Customer();
-        customer.setEmail("test@gmail.com");
 
         MimeMessage mimeMessageMock = mock(MimeMessage.class);
         MimeMessageHelper mimeMessageHelperMock = mock(MimeMessageHelper.class);
@@ -68,11 +68,13 @@ public class OrderServiceImplTests {
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessageMock);
         doNothing().when(mimeMessageHelperMock).setFrom(anyString(), anyString());
 
-        when(emailService.sendPaymentSuccessfulEmail(newOrder.getOrderNumber())).thenReturn(newOrder.getEmail());
+        //when(emailService.sendReceiptRegisteredCustomerEmail(newOrder.getOrderNumber())).thenReturn(newOrder.getEmail());
 
+        when(orderRepository.findByOrderNumber(newOrder.getOrderNumber())).thenReturn(newOrder);
         when(orderRepository.save(any(Order.class))).thenReturn(newOrder);
+        when(customerRepository.findById(customer.getId())).thenReturn(customer);
 
-        Order actualOrderDetails = orderServiceImpl.customerOrder(newOrder , id);
+        Order actualOrderDetails = orderServiceImpl.customerOrder(newOrder , customer.getId());
 
         assertEquals(newOrder, actualOrderDetails);
     }
