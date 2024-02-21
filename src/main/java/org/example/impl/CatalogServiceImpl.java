@@ -1,12 +1,19 @@
 package org.example.impl;
 
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
 import lombok.Data;
 import org.example.exception.ItemNotFoundException;
 import org.example.model.Customer;
 import org.example.model.Item;
 import org.example.service.CatalogService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +28,11 @@ public class CatalogServiceImpl implements CatalogService {
     private Map<Integer, Integer> itemInc;
     private static List<Item> items;
 
+    @Value("${azure.blob.container.name.shop}")
+    String blobContainerName;
+
+    @Autowired
+    BlobServiceClient blobServiceClient;
 
     private Map<String, Item> itemsMap = new HashMap<>();
     public CatalogServiceImpl() {
@@ -29,10 +41,15 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     @Override
-    public void addItem(String name, BigDecimal price, int qty) {
+    public void addItem(String name, BigDecimal price, int qty, MultipartFile image) throws IOException {
         Item item = new Item(name, price, qty);
         items.add(item);
         itemInc.put(qty, 1);
+
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(blobContainerName);
+        String imageName = item.getName() + item.getItemId();
+        BlobClient blobClient = containerClient.getBlobClient(imageName);
+        blobClient.upload(image.getInputStream(), image.getSize(), true);
     }
 
     @Override

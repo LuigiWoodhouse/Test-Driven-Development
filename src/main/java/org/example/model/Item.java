@@ -9,6 +9,7 @@ public class Item {
     private String name;
     private BigDecimal price;
     private Integer qty;
+    private String itemId;
     public Item(String name, BigDecimal price, Integer qty) {
         this.name = name;
         this.price = price;
